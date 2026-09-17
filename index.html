@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Strategy Boardroom — Executive Case Consultant & Strategy Framework Trainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+
+  <!-- TOP EXECUTIVE HEADER -->
+  <header class="app-header">
+    <div class="header-brand" onclick="switchMainView('quiz')">
+      <div class="brand-crest">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">THE STRATEGY BOARDROOM</h1>
+        <p class="brand-tagline">Consultant Action &amp; Strategic Framework Trainer</p>
+      </div>
+    </div>
+
+    <!-- HEADER STATS & CONTROLS -->
+    <div class="header-stats-group">
+      <div id="userHeaderBadge" class="user-badge-header" style="display: flex;">
+        <span>User:</span>
+        <span id="userBadgeName" class="user-badge-name">Candidate</span>
+        <button id="logoutBtn" class="action-circle-btn" style="width: 24px; height: 24px; font-size: 0.65rem; border: none; margin-left: 6px;" onclick="handleLogout()" title="Logout / Switch User">🚪</button>
+      </div>
+      <button id="adminTabBtn" class="switch-btn" style="display: none;" onclick="switchMainView('admin')">
+        👑 Admin Panel
+      </button>
+      <div class="stat-pill score-pill" title="Current Score (Total Correct / Total Attempted)">
+        <span class="stat-label">Score:</span>
+        <span id="headerScore" class="stat-val">0 / 0</span>
+      </div>
+      <div class="stat-pill streak-pill" title="Consecutive Correct Recommendations">
+        <span class="streak-icon">🔥</span>
+        <span id="headerStreak" class="stat-val">0 Streak</span>
+      </div>
+      <button id="saveProgressBtn" class="save-progress-btn" onclick="handleManualSave()" title="Save current simulation progress">
+        💾 Save Progress
+      </button>
+      <button id="soundToggleBtn" class="action-circle-btn" onclick="toggleSound()" title="Toggle Web Audio Synthesizer">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="app-main">
+
+    <!-- NAVIGATION / TRACK FILTER TABS -->
+    <div class="track-filter-bar">
+      <div class="track-pills">
+        <button class="track-pill active" onclick="setTrack('all', this)">
+          🌟 All Cases (303)
+        </button>
+        <button class="track-pill" onclick="setTrack('consulting', this)">
+          💼 Consulting (MBB)
+        </button>
+        <button class="track-pill" onclick="setTrack('tech-pm', this)">
+          💻 Tech &amp; Product Mgmt
+        </button>
+        <button class="track-pill" onclick="setTrack('fmcg-brand', this)">
+          🛍️ FMCG &amp; Brand Strategy
+        </button>
+        <button class="track-pill" onclick="setTrack('gen-man', this)">
+          🏛️ General Management
+        </button>
+      </div>
+
+      <div class="view-switch-btns">
+        <button id="quizTabBtn" class="switch-btn active" onclick="switchMainView('quiz')">
+          🎯 Case Dilemmas
+        </button>
+        <button id="libraryTabBtn" class="switch-btn" onclick="switchMainView('library')">
+          🗂️ 27 Framework Blueprints
+        </button>
+        <button id="leaderboardTabBtn" class="switch-btn" onclick="switchMainView('leaderboard')">
+          🏆 Leaderboard
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: CONSULTING CASE ARENA                                             -->
+    <!-- ========================================================================= -->
+    <section id="view-quiz-arena" class="quiz-arena-section">
+      
+      <!-- PROGRESS BAR -->
+      <div class="quiz-progress-container">
+        <div class="progress-info">
+          <span id="progressText">Case 1 of 303</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progressBarFill" class="progress-fill" style="width: 1%;"></div>
+        </div>
+      </div>
+
+      <!-- MAIN CONSULTING CASE CARD -->
+      <div class="quiz-card">
+        
+        <!-- CASE METADATA HEADER -->
+        <div class="case-meta-header">
+          <span id="caseSectorBadge" class="sector-badge">Aviation / Transportation</span>
+          <div class="meta-right">
+            <span id="caseCompanyBadge" class="company-badge">IndiGo Airlines</span>
+          </div>
+        </div>
+
+        <!-- CASE SCENARIO / EXECUTIVE DILEMMA -->
+        <div class="case-scenario-box">
+          <h2 id="caseTitle" class="case-title">The Low-Cost Sky Duel</h2>
+          <p id="caseContext" class="case-context-text">
+            "A low-cost airline faces an aggressive price war from a conglomerate rival while aviation jet fuel prices surge by 30%. The airline maintains an industry-best 20-minute turnaround time (vs 45 min rival average) and flies a 100% single-type Airbus A320 fleet."
+          </p>
+        </div>
+
+        <!-- CONSULTANT QUESTION PROMPT -->
+        <div class="quiz-prompt-box">
+          <div class="prompt-icon">👔</div>
+          <div class="prompt-text-group">
+            <span class="prompt-label">Management Consultant Decision:</span>
+            <h3 id="questionPrompt" class="prompt-question">
+              As the lead consulting partner advising the CEO, what strategic action would you recommend?
+            </h3>
+          </div>
+        </div>
+
+        <!-- 4 BALANCED CONSULTANT ACTION OPTIONS -->
+        <div id="optionsContainer" class="options-grid">
+          <!-- Rendered dynamically by JS -->
+        </div>
+
+        <!-- DEEP-DIVE STRATEGIC JUSTIFICATION & FRAMEWORK BREAKDOWN (FLUID UI) -->
+        <div id="feedbackCard" class="feedback-card">
+          <div class="feedback-header">
+            <div class="feedback-status">
+              <span id="feedbackIcon" class="feedback-status-icon">✅</span>
+              <div>
+                <h4 id="feedbackTitle" class="feedback-status-title">Top-Tier Recommendation!</h4>
+                <p id="feedbackSubtitle" class="feedback-status-subtitle">Strategic Framework Breakdown</p>
+              </div>
+            </div>
+            <button id="viewFrameworkBlueprintBtn" class="blueprint-btn" onclick="openActiveFrameworkModal()">
+              📖 Open Full Model Blueprint
+            </button>
+          </div>
+
+          <!-- 1. CONSULTANT ACTION JUSTIFICATION -->
+          <div class="debrief-section justification-box">
+            <h5 class="debrief-heading">💡 1. Consultant Action Justification (Why This Is The Right Move):</h5>
+            <p id="feedbackJustification" class="debrief-text"></p>
+          </div>
+
+          <!-- 2. STRATEGIC FRAMEWORK BREAKDOWN & CASE UTILIZATION -->
+          <div class="debrief-section framework-box">
+            <h5 class="debrief-heading">🏛️ 2. How the Strategic Framework is Utilized in this Case:</h5>
+            <p id="feedbackFramework" class="debrief-text"></p>
+            <p id="feedbackUtilization" class="debrief-text" style="margin-top: 0.65rem; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 0.65rem;"></p>
+          </div>
+
+          <!-- 3. BOUNDARY TRAP AVOIDED -->
+          <div class="debrief-section trap-box">
+            <h5 class="debrief-heading">⚠️ 3. Fatal Boundary Trap &amp; Novice Anti-Pattern Avoided:</h5>
+            <p id="feedbackTrap" class="debrief-text"></p>
+          </div>
+
+          <div class="feedback-footer">
+            <span id="streakBonusNotice" class="streak-notice">+100 Points • Consultant Poise Maintained!</span>
+            <button id="nextQuestionBtn" class="btn-primary" onclick="nextQuestion()">
+              Next Strategic Dilemma ▶
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: FINAL SCORECARD / RESULTS SUMMARY                                -->
+    <!-- ========================================================================= -->
+    <section id="view-results-arena" class="results-section" style="display: none;">
+      <div class="results-card">
+        <div class="results-header">
+          <span class="trophy-crest">🏆</span>
+          <h2 class="results-title">Strategic Boardroom Evaluation Complete</h2>
+          <p class="results-subtitle">Candidate: <strong id="resultsCandidateName">Candidate</strong> (<span id="resultsCandidateFt">FT000000</span>)</p>
+        </div>
+
+        <div class="results-score-dial">
+          <div class="dial-number" id="finalScoreVal">0 / 0</div>
+          <div class="dial-percent" id="finalPercentVal">0% Strategic Precision</div>
+        </div>
+
+        <div class="results-metrics-grid">
+          <div class="metric-box">
+            <span class="metric-title">🔥 Best Decision Streak</span>
+            <strong id="finalBestStreak" class="metric-val">0</strong>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">📚 Total Cases Solved</span>
+            <strong id="finalMasteredCount" class="metric-val">0</strong>
+          </div>
+        </div>
+
+        <div class="results-actions">
+          <button class="btn-primary" onclick="restartQuiz()">
+            🔄 Practice Again (All Cases)
+          </button>
+          <button class="btn-secondary" onclick="switchMainView('library')">
+            🗂️ Explore 27 Strategic Frameworks
+          </button>
+          <button class="btn-secondary" onclick="switchMainView('leaderboard')">
+            🏆 View Leaderboard Rankings
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 3: 27 FRAMEWORKS ARSENAL REFERENCE                                  -->
+    <!-- ========================================================================= -->
+    <section id="view-library-arena" class="library-section" style="display: none;">
+      <div class="library-header">
+        <div>
+          <h2 class="library-title">🗂️ The 27 Strategic Frameworks Arsenal</h2>
+          <p class="library-subtitle">Canonical strategic models from the Karpathy Strategic Frameworks Knowledge Base. Click any blueprint for deep theory and schematics.</p>
+        </div>
+        <input type="text" id="librarySearchInput" class="search-input" placeholder="🔍 Search framework, author, or keyword..." oninput="filterLibrary(this.value)">
+      </div>
+
+      <div id="libraryGrid" class="library-grid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 4: LEADERBOARD & ADMIN PANEL                                        -->
+    <!-- ========================================================================= -->
+    <section id="view-leaderboard-arena" class="admin-section" style="display: none;">
+      <div class="admin-card">
+        <div class="admin-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <h2 class="admin-title">🏆 Strategy Boardroom Leaderboard</h2>
+              <div id="cloudSyncStatusBadge" class="stat-pill" style="display: none; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem;" title="Live Google Sheets Synchronization Status">
+                🟢 Live Sheet Synced
+              </div>
+            </div>
+            <p class="admin-subtitle">Candidate Performance Rankings &amp; Decision Streaks (Live Cross-Device)</p>
+          </div>
+          <div id="adminControlsArea" style="display: none; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn-secondary" onclick="exportScoresCSV()" title="Download spreadsheet report in CSV format">📊 Export CSV</button>
+            <button class="btn-secondary" onclick="exportScores()" title="Download raw database in JSON format">📥 Export JSON</button>
+            <button class="btn-secondary" onclick="clearScores()" style="background-color: var(--crimson-primary); color: #fff; border: none;" title="Reset all candidate scores">🗑️ Reset Leaderboard</button>
+          </div>
+        </div>
+        <div class="admin-filters">
+          <input type="text" id="adminSearchInput" class="search-input" placeholder="🔍 Search participant by name or FT number..." oninput="filterAdminTable(this.value)">
+        </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Candidate Name</th>
+                <th>FT Number</th>
+                <th>Score Ratio</th>
+                <th>Accuracy</th>
+                <th>Best Streak</th>
+                <th>Date &amp; Time</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: FRAMEWORK DEEP-DIVE BLUEPRINT OVERLAY                              -->
+  <!-- ========================================================================= -->
+  <div id="frameworkModalOverlay" class="modal-overlay" onclick="closeFrameworkModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalTitle" class="modal-title">Framework Title</h2>
+          <p id="modalSubtitle" class="modal-subtitle">Part &amp; Subtitle</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeFrameworkModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-section">
+          <h4 class="modal-sec-title">📖 Executive Description</h4>
+          <p id="modalDesc" class="modal-text"></p>
+        </div>
+
+        <div class="modal-section">
+          <h4 class="modal-sec-title">📐 Schematic &amp; How to Read It</h4>
+          <div id="modalSchematic" class="schematic-box"></div>
+        </div>
+
+        <div class="modal-grid-2">
+          <div class="modal-section when-use">
+            <h4 class="modal-sec-title">✅ When to Use (Sweet Spot)</h4>
+            <div id="modalWhenUse" class="modal-bullet-box"></div>
+          </div>
+          <div class="modal-section when-not">
+            <h4 class="modal-sec-title">⚠️ When NOT to Use (Boundary Traps)</h4>
+            <div id="modalWhenNot" class="modal-bullet-box"></div>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <h4 class="modal-sec-title">📚 Canonical Academic &amp; Empirical Sources</h4>
+          <div id="modalSources" class="sources-box"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-primary" onclick="closeFrameworkModal()">Close Blueprint</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  
+  <!-- FLOATING TOAST NOTIFICATION -->
+  <div id="toastNotification" class="toast-notification">
+    <span class="toast-icon">💾</span>
+    <span id="toastMessage" class="toast-msg">Progress saved successfully!</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: RESUME SIMULATION OVERLAY                                          -->
+  <!-- ========================================================================= -->
+  <div id="resumeModalOverlay" class="modal-overlay" style="display: none;">
+    <div class="modal-card resume-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" style="color: var(--gold-light);">🎯 Resume Strategy Simulation</h2>
+          <p class="modal-subtitle" id="resumeCandidateSubtitle">Saved progress detected</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div style="background: rgba(6,182,212,0.06); border: 1px solid var(--cyan-glow); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+          <p style="font-size: 0.9rem; color: #f8fafc; line-height: 1.5; margin-bottom: 0.75rem;">
+            Welcome back, <strong id="resumeName" style="color: var(--cyan-light);">Candidate</strong>! You have an active simulation session in progress.
+          </p>
+          <div class="resume-metrics-grid">
+            <div class="resume-metric-box">
+              <span class="resume-metric-title">📍 Resuming At</span>
+              <strong id="resumeCaseNum" class="resume-metric-val" style="color: var(--gold-light);">Case 1</strong>
+            </div>
+            <div class="resume-metric-box">
+              <span class="resume-metric-title">📊 Current Score</span>
+              <strong id="resumeScoreVal" class="resume-metric-val" style="color: var(--emerald-light);">0 / 0</strong>
+            </div>
+            <div class="resume-metric-box">
+              <span class="resume-metric-title">🎯 Accuracy</span>
+              <strong id="resumeAccuracyVal" class="resume-metric-val" style="color: var(--cyan-light);">0%</strong>
+            </div>
+            <div class="resume-metric-box">
+              <span class="resume-metric-title">🔥 Best Streak</span>
+              <strong id="resumeStreakVal" class="resume-metric-val" style="color: #fb7185;">0</strong>
+            </div>
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); text-align: center;">
+          Would you like to pick up where you left off, or reset and restart from Case 1?
+        </p>
+      </div>
+
+      <div class="modal-footer" style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+        <button class="btn-secondary" onclick="confirmRestartFresh()" style="background: rgba(244,63,94,0.15); border: 1px solid var(--crimson-primary); color: #fff;">
+          🔄 Restart from Case 1
+        </button>
+        <button class="btn-primary" onclick="confirmResumeSession()" style="padding: 0.7rem 1.4rem;">
+          ▶ Resume Simulation
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN OVERLAY                                                             -->
+  <!-- ========================================================================= -->
+  <div id="loginOverlay" class="login-overlay" style="display: none;">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-crest">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <h1 class="brand-title" style="color: #fff;">THE STRATEGY BOARDROOM</h1>
+        <p class="brand-tagline">Consultant Action &amp; Strategic Framework Trainer</p>
+      </div>
+      <form id="loginForm" onsubmit="handleLogin(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="form-group">
+          <label for="loginFtNumber">FT Number</label>
+          <input type="text" id="loginFtNumber" required placeholder="Enter FT Number" style="width: 100%;">
+        </div>
+        <div class="form-group">
+          <label for="loginFullName">Full Name</label>
+          <input type="text" id="loginFullName" required placeholder="Enter Full Name" style="width: 100%;">
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem;">Enter Boardroom</button>
+      </form>
+    </div>
+  </div>
+
+  <script charset="UTF-8" src="frameworks.js"></script>
+  <script charset="UTF-8" src="cases.js"></script>
+  <script charset="UTF-8" src="app.js"></script>
+</body>
+</html>
