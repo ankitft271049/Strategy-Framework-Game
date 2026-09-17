@@ -1,0 +1,1 @@
+ankitstrategyframework.netlify.app
